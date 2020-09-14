@@ -1,15 +1,19 @@
 development: &default
   adapter: postgresql
-  database: test_app_development
+  database: BookingRGV_development
   encoding: utf8
   min_messages: warning
   pool: <%= Integer(ENV.fetch("DB_POOL", 5)) %>
   reaping_frequency: <%= Integer(ENV.fetch("DB_REAPING_FREQUENCY", 10)) %>
   timeout: 5000
+  username: master
+  password: <%= ENV['BOOKINGRGV_DATABASE_PASSWORD'] %>
+  host: localhost
+  port: 5434
 
 test:
   <<: *default
-  database: test_app_test
+  database: BookingRGV_test
 
 production: &deploy
   encoding: utf8
