@@ -41,7 +41,7 @@ jobs:
         bundler-cache: true
     - name: Install PostgreSQL 12 client
       run: |
-        sudo apt-get -yqq install libpq-dev
+        sudo apt-get install libpq-dev
 
     - uses: c-hive/gha-yarn-cache@v1
     - name: Install yarn dependencies
@@ -55,19 +55,20 @@ jobs:
         key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
         restore-keys: |
           ${{ runner.os }}-gems-
-    - name: Install dependencies
+   - name: Build and create DB
+     env:
+      # use localhost for the host here because we have specified a container for the job.
+      # If we were running the job on the VM this would be postgres
+       PGHOST: localhost
+       PGUSER: postgres
+       PGPORT: ${{ job.services.postgres.ports[5434] }} # get randomly assigned published port
+       RAILS_ENV: test
       run: |
+        gem install bundler
         bundle config path vendor/bundle
         bundle install --jobs 4 --retry 3
-      
-    - name: Create database
-      run: |
-          bundle exec rails db:create
-          bundle exec rake db:schema:load
-      env:
-        RAILS_ENV: test
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
+        bin/rails db:setup
+        
         
       
     - name: Run test

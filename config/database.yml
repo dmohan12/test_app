@@ -14,6 +14,8 @@ development: &default
 test:
   <<: *default
   database: BookingRGV_test
+  username: postgres
+  host: localhost
 
 production: &deploy
   encoding: utf8
