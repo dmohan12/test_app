@@ -44,6 +44,10 @@ jobs:
           sudo apt-get -yqq install libpq-dev build-essential libcurl4-openssl-dev
           gem install bundler
           bundle install --jobs 4 --retry 3
+      
+      - uses: c-hive/gha-yarn-cache@v1
+      - name: Install yarn dependencies
+        run: yarn install
         
       - name: Setup test database
         env:
