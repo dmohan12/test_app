@@ -55,19 +55,19 @@ jobs:
         key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
         restore-keys: |
           ${{ runner.os }}-gems-
-   - name: Build and create DB
-     env:
-      # use localhost for the host here because we have specified a container for the job.
-      # If we were running the job on the VM this would be postgres
-       PGHOST: localhost
-       PGUSER: postgres
-       PGPORT: ${{ job.services.postgres.ports[5434] }} # get randomly assigned published port
-       RAILS_ENV: test
-      run: |
-        gem install bundler
-        bundle config path vendor/bundle
-        bundle install --jobs 4 --retry 3
-        bin/rails db:setup
+    - name: Build and create DB
+      env:
+        # use localhost for the host here because we have specified a container for the job.
+        # If we were running the job on the VM this would be postgres
+        PGHOST: localhost
+        PGUSER: postgres
+        PGPORT: ${{ job.services.postgres.ports[5434] }} # get randomly assigned published port
+        RAILS_ENV: test
+        run: |
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          bin/rails db:setup
         
         
       
